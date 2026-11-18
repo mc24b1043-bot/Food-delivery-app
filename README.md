@@ -1,17 +1,10 @@
-# Amber - Food Ordering Website
+# Amber - Multi-Restaurant Food Ordering
 
-Amber is a food ordering website built with React, Express, and MongoDB. It includes dish search, price sorting, cart and order flows, and an admin panel for managing menu items and orders.
+Amber is a multi-restaurant food ordering website built with React, Express, and MongoDB. Customers can browse restaurants, explore each restaurant's menu, search dishes, and place orders. Admins can add restaurants and assign menu items to each one.
 
 ## Project credits
 
 This project builds on the public [Food-Delivery repository by Mshandev](https://github.com/Mshandev/Food-Delivery), with additional customization and features.
-
-## Features
-
-- Search dishes by name or description
-- Sort the menu by price, low to high or high to low
-- Clear a search quickly and show a helpful empty state
-- Responsive contact section with email and phone links
 
 ## Demo
 
@@ -32,7 +25,10 @@ This project builds on the public [Food-Delivery repository by Mshandev](https:/
 - Order Management
 - Products Management
 - Filter Food Products
-- Login/Signup
+- Restaurant browsing and restaurant-specific menus
+- Add restaurants and menu items from the admin panel
+- Search dishes across restaurants or inside a selected menu
+- Sort menu items by price
 - Authenticated APIs
 - REST APIs
 - Role-Based Identification
@@ -62,9 +58,9 @@ npm.cmd --prefix admin install
 npm.cmd --prefix backend install
 ```
 
-The backend starts in local demo mode when `MONGO_URL` is not set. It serves a sample menu, persists accounts/menu/cart/orders to `backend/data/demo-store.json`, and provides a demo checkout flow. No `.env` file, MongoDB service, or Stripe key is needed for local browsing and testing. The first account registered in demo mode is the admin account.
+The backend starts in local demo mode when `MONGO_URL` is not set. It seeds four restaurants and 32 dishes, then persists new accounts, restaurants, menu items, carts, and orders in `backend/data/demo-store.json`. No MongoDB service or Stripe key is needed for local browsing and testing; checkout uses a clearly marked demo flow. The first account registered in demo mode is the admin account.
 
-For MongoDB mode or real Stripe test checkout, copy `backend/.env.example` to `backend/.env` and fill in your own values. Set `ADMIN_EMAIL` to the email that should have admin privileges. Never commit your `.env` file or real secret keys.
+For MongoDB mode or real Stripe test checkout, copy `backend/.env.example` to `backend/.env` and fill in your own values. Set `ADMIN_EMAIL` to the email that should have admin privileges. Seed the starter restaurants and 32 menu items with `npm.cmd --prefix backend run seed`. Never commit your `.env` file or real secret keys.
 
 Start each app in its own VS Code terminal from the project root:
 
@@ -84,6 +80,10 @@ npm.cmd run dev
 ```
 
 Open the URLs printed by Vite in your browser. The frontend uses `http://127.0.0.1:5173`, the admin uses `http://127.0.0.1:5174`, and the backend health check is `http://127.0.0.1:4000`.
+
+## Production deployment
+
+The `Dockerfile` and `render.yaml` define a single-service Render deployment for the customer site, admin panel, and API. Production uses MongoDB and requires `MONGO_URL`, `JWT_SECRET`, and `ADMIN_EMAIL`; Stripe and a persistent uploads disk are optional. Follow Render's current plan and storage pricing before creating the service. Deploy this repository on Render after setting the required environment variables and reviewing the plan and storage costs.
 
 ## Tech Stack
 * [React](https://reactjs.org/)

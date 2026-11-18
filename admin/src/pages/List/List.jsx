@@ -10,12 +10,15 @@ const List = ({ url }) => {
   const navigate = useNavigate();
   const { token,admin } = useContext(StoreContext);
   const [list, setList] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
 
   const fetchList = async () => {
     try {
       const response = await axios.get(`${url}/api/food/list`);
       if (response.data.success) setList(response.data.data || []);
       else toast.error(response.data.message || "Could not load the menu.");
+      const restaurantResponse = await axios.get(`${url}/api/restaurant/list`);
+      if (restaurantResponse.data.success) setRestaurants(restaurantResponse.data.data || []);
     } catch (error) {
       toast.error(error.response?.data?.message || "Could not connect to the backend.");
     }
@@ -51,6 +54,7 @@ const List = ({ url }) => {
         <div className="list-table-format title">
           <b>Image</b>
           <b>Name</b>
+          <b>Restaurant</b>
           <b>Category</b>
           <b>Price</b>
           <b>Action</b>
@@ -60,6 +64,7 @@ const List = ({ url }) => {
             <div key={index} className="list-table-format">
               <img src={`${url}/images/` + item.image} alt="" />
               <p>{item.name}</p>
+              <p>{restaurants.find((restaurant) => restaurant._id === item.restaurantId)?.name || "-"}</p>
               <p>{item.category}</p>
               <p>${item.price}</p>
               <p onClick={() => removeFood(item._id)} className="cursor">

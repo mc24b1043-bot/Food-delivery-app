@@ -6,9 +6,10 @@ export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
   const [cartItems, setCartItems] = useState({});
-  const url = import.meta.env.VITE_API_URL || "http://127.0.0.1:4000";
+  const url = import.meta.env.VITE_API_URL ?? (import.meta.env.PROD ? "" : "http://127.0.0.1:4000");
   const [token, setToken] = useState("");
   const [food_list, setFoodList] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
 
   const addToCart = async (itemId) => {
     if (token) {
@@ -62,6 +63,12 @@ const StoreContextProvider = (props) => {
     setFoodList(response.data.data || []);
   };
 
+  const fetchRestaurants = async () => {
+    const response = await axios.get(url + "/api/restaurant/list");
+    if (!response.data.success) throw new Error(response.data.message || "Restaurants could not load.");
+    setRestaurants(response.data.data || []);
+  };
+
   const syncCart = async (accountToken) => {
     const response = await axios.post(url + "/api/cart/get", {}, { headers: { token: accountToken } });
     if (!response.data.success) throw new Error(response.data.message || "Could not load your cart.");
@@ -84,6 +91,11 @@ const StoreContextProvider = (props) => {
       } catch (error) {
         toast.error(error.response?.data?.message || "Could not connect to the menu API. Start the backend and refresh.");
       }
+      try {
+        await fetchRestaurants();
+      } catch (error) {
+        toast.error(error.response?.data?.message || "Could not load restaurants.");
+      }
       if (localStorage.getItem("token")) {
         const savedToken = localStorage.getItem("token");
         setToken(savedToken);
@@ -95,6 +107,7 @@ const StoreContextProvider = (props) => {
 
   const contextValue = {
     food_list,
+    restaurants,
     cartItems,
     setCartItems,
     addToCart,

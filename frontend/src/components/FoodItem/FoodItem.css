@@ -13,6 +13,7 @@
 .food-item-info{
     padding: 20px;
 }
+.food-item-restaurant{font-size:11px;color:#d95039;font-weight:650;letter-spacing:.25px;margin:-6px 0 9px}
 .food-item-name-rating{
     display: flex;
     justify-content: space-between;

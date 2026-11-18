@@ -10,7 +10,7 @@ const foodRouter = express.Router();
 
 // Image Storage Engine
 
-const uploadsDirectory = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "uploads");
+const uploadsDirectory = process.env.UPLOADS_DIR || path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "uploads");
 await mkdir(uploadsDirectory, { recursive: true });
 const storage= multer.diskStorage({
     destination: uploadsDirectory,
@@ -21,7 +21,7 @@ const storage= multer.diskStorage({
 
 const upload= multer({storage:storage})
 
-foodRouter.post("/add",upload.single("image"),authMiddleware,addFood);
+foodRouter.post("/add",authMiddleware,upload.single("image"),addFood);
 foodRouter.get("/list",listFood);
 foodRouter.post("/remove",authMiddleware,removeFood);
 

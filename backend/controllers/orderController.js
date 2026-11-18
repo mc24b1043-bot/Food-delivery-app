@@ -4,7 +4,7 @@ import Stripe from "stripe";
 
 // placing user order for frontend
 const placeOrder = async (req, res) => {
-  const frontend_url = process.env.FRONTEND_URL || "http://127.0.0.1:5173";
+  const frontend_url = process.env.FRONTEND_URL || process.env.RENDER_EXTERNAL_URL || "http://127.0.0.1:5173";
   try {
     if (!process.env.STRIPE_SECRET_KEY) {
       return res.status(503).json({ success: false, message: "Add STRIPE_SECRET_KEY to backend/.env to enable checkout." });

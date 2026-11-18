@@ -8,9 +8,10 @@ import Orders from "./pages/Orders/Orders";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./components/Login/Login";
+import Restaurants from "./pages/Restaurants/Restaurants";
 
 const App = () => {
-  const url = import.meta.env.VITE_API_URL || "http://127.0.0.1:4000";
+  const url = import.meta.env.VITE_API_URL ?? (import.meta.env.PROD ? "" : "http://127.0.0.1:4000");
   return (
     <div>
       <ToastContainer />
@@ -21,6 +22,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Login url={url}/>} />
           <Route path="/add" element={<Add url={url}/>} />
+          <Route path="/restaurants" element={<Restaurants url={url}/>} />
           <Route path="/list" element={<List url={url}/>} />
           <Route path="/orders" element={<Orders url={url}/>} />
         </Routes>

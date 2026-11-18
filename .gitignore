@@ -12,3 +12,5 @@ backend/data/demo-store.json
 backend/uploads/*
 !backend/uploads/*food_*.png
 !backend/uploads/shopnest.PNG
+
+backend/data/*.tmp

@@ -12,11 +12,13 @@ const Add = ({url}) => {
   const navigate=useNavigate();
   const {token,admin} = useContext(StoreContext);
   const [image, setImage] = useState(false);
+  const [restaurants, setRestaurants] = useState([]);
   const [data, setData] = useState({
     name: "",
     description: "",
     price: "",
     category: "Salad",
+    restaurantId: "",
   });
 
   const onChangeHandler = (event) => {
@@ -32,6 +34,7 @@ const Add = ({url}) => {
     formData.append("description", data.description);
     formData.append("price", Number(data.price));
     formData.append("category", data.category);
+    formData.append("restaurantId", data.restaurantId);
     formData.append("image", image);
 
     try {
@@ -40,7 +43,7 @@ const Add = ({url}) => {
         toast.error(response.data.message || "Could not add this dish.");
         return;
       }
-      setData({ name: "", description: "", price: "", category: "Salad" });
+      setData((current) => ({ ...current, name: "", description: "", price: "", category: "Salad" }));
       setImage(false);
       toast.success(response.data.message);
     } catch (error) {
@@ -52,10 +55,26 @@ const Add = ({url}) => {
       toast.error("Please Login First");
        navigate("/");
     }
-  },[])
+    axios.get(`${url}/api/restaurant/list`).then((response) => {
+      if (response.data.success) {
+        setRestaurants(response.data.data || []);
+        setData((current) => ({ ...current, restaurantId: current.restaurantId || response.data.data?.[0]?._id || "" }));
+      }
+    }).catch(() => toast.error("Could not load restaurants. Start the backend and try again."));
+  },[url])
   return (
     <div className="add">
       <form onSubmit={onSubmitHandler} className="flex-col">
+        <div className="add-product-name flex-col">
+          <p>Restaurant</p>
+          {restaurants.length ? (
+            <select name="restaurantId" value={data.restaurantId} onChange={onChangeHandler} required>
+              {restaurants.map((restaurant) => <option key={restaurant._id} value={restaurant._id}>{restaurant.name}</option>)}
+            </select>
+          ) : (
+            <p>No restaurants yet. Add one from the Restaurants page first.</p>
+          )}
+        </div>
         <div className="add-img-upload flex-col">
           <p>Upload image</p>
           <label htmlFor="image">
@@ -105,7 +124,7 @@ const Add = ({url}) => {
             >
               <option value="Salad">Salad</option>
               <option value="Rolls">Rolls</option>
-              <option value="Deserts">Deserts</option>
+              <option value="Desserts">Desserts</option>
               <option value="Sandwich">Sandwich</option>
               <option value="Cake">Cake</option>
               <option value="Pure Veg">Pure Veg</option>
@@ -127,8 +146,8 @@ const Add = ({url}) => {
             />
           </div>
         </div>
-        <button type="submit" className="add-btn">
-          ADD
+        <button type="submit" className="add-btn" disabled={!restaurants.length}>
+          {restaurants.length ? "ADD DISH" : "ADD A RESTAURANT FIRST"}
         </button>
       </form>
     </div>

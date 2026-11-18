@@ -1,25 +1,29 @@
 import foodModel from "../models/foodModel.js";
 import userModel from "../models/userModel.js";
+import restaurantModel from "../models/restaurantModel.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-const uploadsDirectory = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "uploads");
+const uploadsDirectory = process.env.UPLOADS_DIR || path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "uploads");
 
 // add food items
 
 const addFood = async (req, res) => {
-  let image_filename = `${req.file.filename}`;
-  const food = new foodModel({
-    name: req.body.name,
-    description: req.body.description,
-    price: req.body.price,
-    category: req.body.category,
-    image: image_filename,
-  });
   try {
-    let userData = await userModel.findById(req.body.userId);
-    if (userData && userData.role === "admin") {
+    let userData = await userModel.findById(req.userId || req.body.userId);
+    if (userData?.role === "admin") {
+      if (!req.file) return res.status(400).json({ success: false, message: "Choose a dish image." });
+      const restaurant = await restaurantModel.findById(req.body.restaurantId);
+      if (!restaurant) return res.status(400).json({ success: false, message: "Choose a valid restaurant first." });
+      const food = new foodModel({
+        name: req.body.name,
+        description: req.body.description,
+        price: req.body.price,
+        category: req.body.category,
+        restaurantId: restaurant._id,
+        image: req.file.filename,
+      });
       await food.save();
       res.json({ success: true, message: "Food Added" });
     } else {
@@ -45,7 +49,7 @@ const listFood = async (req, res) => {
 // remove food item
 const removeFood = async (req, res) => {
   try {
-    let userData = await userModel.findById(req.body.userId);
+    let userData = await userModel.findById(req.userId || req.body.userId);
     if (userData && userData.role === "admin") {
       const food = await foodModel.findById(req.body.id);
       fs.unlink(path.join(uploadsDirectory, food.image), () => {});

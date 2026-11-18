@@ -1,0 +1,21 @@
+.restaurant-admin{width:min(1100px,78%);margin:42px auto 70px;color:#282828}
+.restaurant-admin-heading>span{font-size:11px;font-weight:700;letter-spacing:1.5px;color:#e34b35}
+.restaurant-admin-heading h1{font-size:32px;margin:8px 0}
+.restaurant-admin-heading p{color:#777}
+.restaurant-admin-layout{display:grid;grid-template-columns:minmax(280px,.8fr) minmax(350px,1.2fr);gap:28px;margin-top:28px;align-items:start}
+.restaurant-form,.restaurant-admin-list{background:#fff;border:1px solid #e8e8e8;border-radius:12px;padding:22px}
+.restaurant-form h2,.restaurant-admin-list h2{font-size:20px;margin-bottom:18px}
+.restaurant-form label{display:flex;flex-direction:column;gap:7px;margin:14px 0;color:#555;font-size:14px}
+.restaurant-form input,.restaurant-form textarea{width:100%;padding:11px;border:1px solid #d8d8d8;border-radius:6px;font:inherit;resize:vertical}
+.restaurant-form button{border:0;border-radius:6px;background:#e34b35;color:#fff;padding:12px 18px;font:inherit;font-weight:650;cursor:pointer}
+.restaurant-form button:disabled{opacity:.6;cursor:wait}
+.restaurant-admin-list-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.restaurant-admin-list-heading span{font-size:13px;color:#777}
+.restaurant-admin-row{display:flex;align-items:center;gap:14px;padding:14px 0;border-top:1px solid #eee}
+.restaurant-admin-row img{width:56px;height:56px;border-radius:9px;object-fit:cover}
+.restaurant-admin-row div{flex:1;min-width:0}
+.restaurant-admin-row h3{font-size:15px}
+.restaurant-admin-row p,.restaurant-admin-row small{font-size:12px;color:#777;margin-top:3px}
+.restaurant-admin-row>b{font-size:12px;color:#666;white-space:nowrap}
+.restaurant-admin-empty{color:#777;padding:20px 0}
+@media(max-width:780px){.restaurant-admin{width:90%;margin-top:24px}.restaurant-admin-layout{grid-template-columns:1fr}}

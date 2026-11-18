@@ -1,0 +1,8 @@
+.git
+**/node_modules
+**/dist
+**/.env
+backend/data
+backend/uploads/*
+!backend/uploads/*food_*.png
+!backend/uploads/shopnest.PNG

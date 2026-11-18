@@ -12,7 +12,7 @@ import authMiddleware from "../middleware/auth.js";
 import { readStore, updateStore } from "../config/demoStore.js";
 
 const router = express.Router();
-const uploadsPath = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "uploads");
+const uploadsPath = process.env.UPLOADS_DIR || path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "uploads");
 await mkdir(uploadsPath, { recursive: true });
 const upload = multer({
   storage: multer.diskStorage({
@@ -81,6 +81,50 @@ router.get("/api/food/list", async (_req, res) => {
   catch (error) { console.error(error); res.status(500).json({ success: false, message: "Could not load menu." }); }
 });
 
+router.get("/api/restaurant/list", async (_req, res) => {
+  try {
+    const store = await readStore();
+    const data = store.restaurants.map((restaurant) => ({
+      ...restaurant,
+      itemCount: store.foods.filter((food) => food.restaurantId === restaurant._id).length,
+    }));
+    res.json({ success: true, data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Could not load restaurants." });
+  }
+});
+
+router.post("/api/restaurant/add", authMiddleware, requireAdmin, async (req, res) => {
+  try {
+    const name = String(req.body.name || "").trim();
+    const cuisine = String(req.body.cuisine || "").trim();
+    const description = String(req.body.description || "").trim();
+    if (!name || !cuisine || !description) {
+      return res.status(400).json({ success: false, message: "Restaurant name, cuisine, and description are required." });
+    }
+    const restaurant = await updateStore((store) => {
+      if (store.restaurants.some((entry) => entry.name.toLowerCase() === name.toLowerCase())) return { error: "A restaurant with this name already exists." };
+      const created = {
+        _id: `restaurant-${randomUUID()}`,
+        name,
+        cuisine,
+        description,
+        deliveryTime: String(req.body.deliveryTime || "25-35 min").trim(),
+        rating: 4.5,
+        image: ["1722865444288food_1.png", "1722866830901food_22.png", "1722867018540food_26.png", "1722866694357food_19.png", "1722865976487food_7.png"][store.restaurants.length % 5],
+      };
+      store.restaurants.push(created);
+      return { restaurant: created };
+    });
+    if (restaurant.error) return res.status(409).json({ success: false, message: restaurant.error });
+    res.status(201).json({ success: true, message: "Restaurant added. Now add its menu items.", data: restaurant.restaurant });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Could not add this restaurant." });
+  }
+});
+
 router.post("/api/food/add", authMiddleware, requireAdmin, upload.single("image"), async (req, res) => {
   try {
     const result = await updateStore((store) => {
@@ -88,14 +132,15 @@ router.post("/api/food/add", authMiddleware, requireAdmin, upload.single("image"
       if (!req.file) return { error: "Choose an image for this dish." };
       const food = {
         _id: randomUUID(),
+        restaurantId: String(req.body.restaurantId || ""),
         name: String(req.body.name || "").trim(),
         description: String(req.body.description || "").trim(),
         price: Number(req.body.price),
         category: String(req.body.category || "").trim(),
         image: req.file.filename,
       };
-      if (!food.name || !food.description || !food.category || !Number.isFinite(food.price) || food.price <= 0) {
-        return { error: "Enter a name, description, category, and positive price." };
+      if (!food.name || !food.description || !food.category || !Number.isFinite(food.price) || food.price <= 0 || !store.restaurants.some((restaurant) => restaurant._id === food.restaurantId)) {
+        return { error: "Choose a restaurant and enter a name, description, category, and positive price." };
       }
       store.foods.unshift(food);
       return { food };
@@ -167,7 +212,7 @@ router.post("/api/order/place", authMiddleware, async (req, res) => {
       return { order: created };
     });
     if (order.error) return res.status(400).json({ success: false, message: order.error });
-    const frontendUrl = process.env.FRONTEND_URL || "http://127.0.0.1:5173";
+    const frontendUrl = process.env.FRONTEND_URL || process.env.RENDER_EXTERNAL_URL || "http://127.0.0.1:5173";
     if (process.env.STRIPE_SECRET_KEY) {
       const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
       const lineItems = order.order.items.map((item) => ({
