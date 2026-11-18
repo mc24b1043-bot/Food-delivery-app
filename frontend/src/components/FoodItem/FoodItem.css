@@ -14,6 +14,7 @@
     padding: 20px;
 }
 .food-item-restaurant{font-size:11px;color:#d95039;font-weight:650;letter-spacing:.25px;margin:-6px 0 9px}
+.food-diet-tag{display:inline-block;font-size:11px;font-weight:650;padding:3px 7px;border:1px solid currentColor;border-radius:4px;margin:0 0 8px}.food-diet-tag.veg{color:#16834a}.food-diet-tag.nonveg{color:#c54635}
 .food-item-name-rating{
     display: flex;
     justify-content: space-between;

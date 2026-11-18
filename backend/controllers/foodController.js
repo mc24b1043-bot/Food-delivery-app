@@ -22,6 +22,7 @@ const addFood = async (req, res) => {
         price: req.body.price,
         category: req.body.category,
         restaurantId: restaurant._id,
+        isVeg: req.body.isVeg === "true" || req.body.isVeg === true,
         image: req.file.filename,
       });
       await food.save();

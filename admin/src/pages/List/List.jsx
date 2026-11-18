@@ -56,6 +56,7 @@ const List = ({ url }) => {
           <b>Name</b>
           <b>Restaurant</b>
           <b>Category</b>
+          <b>Diet</b>
           <b>Price</b>
           <b>Action</b>
         </div>
@@ -66,6 +67,7 @@ const List = ({ url }) => {
               <p>{item.name}</p>
               <p>{restaurants.find((restaurant) => restaurant._id === item.restaurantId)?.name || "-"}</p>
               <p>{item.category}</p>
+              <p>{item.isVeg ? "Veg" : "Non-veg"}</p>
               <p>${item.price}</p>
               <p onClick={() => removeFood(item._id)} className="cursor">
                 X

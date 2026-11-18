@@ -137,6 +137,7 @@ router.post("/api/food/add", authMiddleware, requireAdmin, upload.single("image"
         description: String(req.body.description || "").trim(),
         price: Number(req.body.price),
         category: String(req.body.category || "").trim(),
+        isVeg: String(req.body.isVeg).toLowerCase() === "true",
         image: req.file.filename,
       };
       if (!food.name || !food.description || !food.category || !Number.isFinite(food.price) || food.price <= 0 || !store.restaurants.some((restaurant) => restaurant._id === food.restaurantId)) {

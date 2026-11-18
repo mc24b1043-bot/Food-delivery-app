@@ -24,7 +24,7 @@ try {
     const { _id, restaurantId, ...fields } = food;
     const result = await foodModel.updateOne(
       { name: fields.name, restaurantId: restaurantIds.get(restaurantId) },
-      { $setOnInsert: { ...fields, restaurantId: restaurantIds.get(restaurantId) } },
+      { $set: { isVeg: fields.isVeg }, $setOnInsert: { ...fields, restaurantId: restaurantIds.get(restaurantId) } },
       { upsert: true },
     );
     if (result.upsertedCount) added += 1;

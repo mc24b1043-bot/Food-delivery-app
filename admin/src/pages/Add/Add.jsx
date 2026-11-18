@@ -19,6 +19,7 @@ const Add = ({url}) => {
     price: "",
     category: "Salad",
     restaurantId: "",
+    isVeg: "true",
   });
 
   const onChangeHandler = (event) => {
@@ -35,6 +36,7 @@ const Add = ({url}) => {
     formData.append("price", Number(data.price));
     formData.append("category", data.category);
     formData.append("restaurantId", data.restaurantId);
+    formData.append("isVeg", data.isVeg);
     formData.append("image", image);
 
     try {
@@ -145,6 +147,7 @@ const Add = ({url}) => {
               required
             />
           </div>
+          <div className="add-category flex-col"><p>Diet</p><select name="isVeg" value={data.isVeg} onChange={onChangeHandler}><option value="true">Vegetarian</option><option value="false">Non-vegetarian</option></select></div>
         </div>
         <button type="submit" className="add-btn" disabled={!restaurants.length}>
           {restaurants.length ? "ADD DISH" : "ADD A RESTAURANT FIRST"}
