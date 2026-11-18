@@ -20,20 +20,22 @@ const Login = ({ url }) => {
   };
   const onLogin = async (event) => {
     event.preventDefault();
-    const response = await axios.post(url + "/api/user/login", data);
-    if (response.data.success) {
-      if (response.data.role === "admin") {
+    try {
+      const response = await axios.post(url + "/api/user/login", data);
+      if (!response.data.success) {
+        toast.error(response.data.message || "Could not log in.");
+      } else if (response.data.role === "admin") {
         setToken(response.data.token);
         setAdmin(true);
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("admin", true);
-        toast.success("Login Successfully");
-        navigate("/add")
-      }else{
-        toast.error("You are not an admin");
+        localStorage.setItem("admin", "true");
+        toast.success("Welcome to Amber Admin.");
+        navigate("/add");
+      } else {
+        toast.error("This account is not an admin. In local demo mode, the first account is the admin.");
       }
-    } else {
-      toast.error(response.data.message);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Could not connect to the backend. Start it and try again.");
     }
   };
   useEffect(()=>{

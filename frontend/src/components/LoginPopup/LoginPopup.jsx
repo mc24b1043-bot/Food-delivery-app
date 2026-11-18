@@ -6,7 +6,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const LoginPopup = ({ setShowLogin }) => {
-  const {url, setToken } = useContext(StoreContext);
+  const {url, setToken, syncCart } = useContext(StoreContext);
   const [currentState, setCurrentState] = useState("Login");
   const [data, setData] = useState({
     name: "",
@@ -28,14 +28,19 @@ const LoginPopup = ({ setShowLogin }) => {
     } else {
       newUrl += "/api/user/register";
     }
-    const response = await axios.post(newUrl, data);
-    if (response.data.success) {
+    try {
+      const response = await axios.post(newUrl, data);
+      if (!response.data.success) {
+        toast.error(response.data.message || "Could not sign in.");
+        return;
+      }
       setToken(response.data.token);
       localStorage.setItem("token", response.data.token);
-      toast.success("Login Successfully")
+      await syncCart(response.data.token);
+      toast.success(currentState === "Login" ? "Welcome back!" : response.data.role === "admin" ? "Account created. This is the local demo admin account." : "Account created successfully.");
       setShowLogin(false);
-    }else{
-      toast.error(response.data.message);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Could not connect to the backend. Check that it is running.");
     }
   };
   return (
@@ -83,7 +88,7 @@ const LoginPopup = ({ setShowLogin }) => {
           {currentState === "Sign Up" ? "Create Account" : "Login"}
         </button>
         <div className="login-popup-condition">
-          <input type="checkbox" required />
+          <input type="checkbox" required={currentState !== "Login"} />
           <p>By continuing, i agree to the terms of use & privacy policy.</p>
         </div>
         {currentState === "Login" ? (

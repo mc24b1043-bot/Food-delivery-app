@@ -18,7 +18,7 @@ const Navbar = () => {
   }
   return (
     <div className="navbar">
-      <span className="admin-brand">Sunil's Kitchen <small>Admin</small></span>
+      <span className="admin-brand">Amber <small>Admin</small></span>
       {token && admin ? (
         <p className="login-conditon" onClick={logout}>Logout</p>
       ) : (

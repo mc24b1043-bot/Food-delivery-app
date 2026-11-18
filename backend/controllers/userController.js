@@ -6,7 +6,8 @@ import validator from "validator";
 // login user
 
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
+  const email = String(req.body.email || "").trim().toLowerCase();
+  const password = String(req.body.password || "");
   try {
     const user = await userModel.findOne({ email });
     if (!user) {
@@ -34,7 +35,9 @@ const createToken = (id) => {
 // register user
 
 const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const name = String(req.body.name || "").trim();
+  const email = String(req.body.email || "").trim().toLowerCase();
+  const password = String(req.body.password || "");
   try {
     // checking user is already exist
     const exists = await userModel.findOne({ email });
@@ -52,16 +55,21 @@ const registerUser = async (req, res) => {
         message: "Please enter strong password",
       });
     }
+    if (!name) {
+      return res.json({ success: false, message: "Please enter your name." });
+    }
 
     // hashing user password
 
     const salt = await bcrypt.genSalt(Number(process.env.SALT));
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    const configuredAdmin = process.env.ADMIN_EMAIL?.trim().toLowerCase();
     const newUser = new userModel({
       name: name,
       email: email,
       password: hashedPassword,
+      role: configuredAdmin && configuredAdmin === email.toLowerCase() ? "admin" : "user",
     });
 
     const user = await newUser.save();

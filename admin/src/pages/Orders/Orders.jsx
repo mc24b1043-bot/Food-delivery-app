@@ -15,15 +15,18 @@ const Orders = ({ url }) => {
   const [orders, setOrders] = useState([]);
 
   const fetchAllOrder = async () => {
+    try {
     const response = await axios.get(url + "/api/order/list", {
       headers: { token },
     });
     if (response.data.success) {
       setOrders(response.data.data);
     }
+    } catch (error) { toast.error(error.response?.data?.message || "Could not load orders."); }
   };
 
   const statusHandler = async (event, orderId) => {
+    try {
     const response = await axios.post(
       url + "/api/order/status",
       {
@@ -38,6 +41,7 @@ const Orders = ({ url }) => {
     } else {
       toast.error(response.data.message);
     }
+    } catch (error) { toast.error(error.response?.data?.message || "Could not update the order."); }
   };
   useEffect(() => {
     if (!admin && !token) {

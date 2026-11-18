@@ -34,18 +34,17 @@ const Add = ({url}) => {
     formData.append("category", data.category);
     formData.append("image", image);
 
-    const response = await axios.post(`${url}/api/food/add`, formData,{headers:{token}});
-    if (response.data.success) {
-      setData({
-        name: "",
-        description: "",
-        price: "",
-        category: "Salad",
-      });
+    try {
+      const response = await axios.post(`${url}/api/food/add`, formData, { headers: { token } });
+      if (!response.data.success) {
+        toast.error(response.data.message || "Could not add this dish.");
+        return;
+      }
+      setData({ name: "", description: "", price: "", category: "Salad" });
       setImage(false);
       toast.success(response.data.message);
-    } else {
-      toast.error(response.data.message);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Could not connect to the menu API.");
     }
   };
   useEffect(()=>{
@@ -119,7 +118,9 @@ const Add = ({url}) => {
             <input
               onChange={onChangeHandler}
               value={data.price}
-              type="Number"
+            type="number"
+            min="0.01"
+            step="0.01"
               name="price"
               placeholder="$20"
               required

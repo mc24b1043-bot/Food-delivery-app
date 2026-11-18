@@ -8,3 +8,7 @@ Thumbs.db
 a.exe
 tempCodeRunnerFile.exe
 .vscode/
+backend/data/demo-store.json
+backend/uploads/*
+!backend/uploads/*food_*.png
+!backend/uploads/shopnest.PNG

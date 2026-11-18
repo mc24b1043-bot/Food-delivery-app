@@ -6,7 +6,7 @@ const Footer = () => {
     <div className="footer" id="footer">
       <div className="footer-content">
         <div className="footer-content-left">
-          <a className="footer-brand" href="/">Sunil's Kitchen</a>
+          <a className="footer-brand" href="/">Amber</a>
           <p>
             Good food, delivered with care. Browse the menu, build your order,
             and enjoy your favourites from the comfort of home.
@@ -30,7 +30,7 @@ const Footer = () => {
       </div>
       <hr />
       <p className="footer-copyright">
-        Built and customized by Sunil | Food Delivery | Copyright {new Date().getFullYear()}
+        Amber | Food Delivery | Copyright {new Date().getFullYear()}
       </p>
     </div>
   );

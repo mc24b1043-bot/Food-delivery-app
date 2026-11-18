@@ -12,15 +12,17 @@ const List = ({ url }) => {
   const [list, setList] = useState([]);
 
   const fetchList = async () => {
-    const response = await axios.get(`${url}/api/food/list`);
-    if (response.data.success) {
-      setList(response.data.data);
-    } else {
-      toast.error("Error");
+    try {
+      const response = await axios.get(`${url}/api/food/list`);
+      if (response.data.success) setList(response.data.data || []);
+      else toast.error(response.data.message || "Could not load the menu.");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Could not connect to the backend.");
     }
   };
 
   const removeFood = async (foodId) => {
+    try {
     const response = await axios.post(
       `${url}/api/food/remove`,
       { id: foodId },
@@ -30,8 +32,9 @@ const List = ({ url }) => {
     if (response.data.success) {
       toast.success(response.data.message);
     } else {
-      toast.error("Error");
+      toast.error(response.data.message || "Could not remove this dish.");
     }
+    } catch (error) { toast.error(error.response?.data?.message || "Could not remove this dish."); }
   };
   useEffect(() => {
     if (!admin && !token) {

@@ -18,7 +18,7 @@ const Navbar = ({ setShowLogin }) => {
   }
   return (
     <div className="navbar">
-      <Link to="/" className="brand-name">Sunil's Kitchen</Link>
+      <Link to="/" className="brand-name">Amber</Link>
       <ul className="navbar-menu">
         <Link
           to="/"
@@ -39,7 +39,7 @@ const Navbar = ({ setShowLogin }) => {
           onClick={() => setMenu("mobile-app")}
           className={menu === "mobile-app" ? "active" : ""}
         >
-          mobile-app
+          about
         </a>
         <a
           href="#footer"
@@ -50,7 +50,7 @@ const Navbar = ({ setShowLogin }) => {
         </a>
       </ul>
       <div className="navbar-right">
-        <img src={assets.search_icon} alt="" />
+        <button className="navbar-search-button" aria-label="Search dishes" onClick={() => { if (window.location.pathname !== "/") navigate("/"); window.setTimeout(() => { document.getElementById("dish-search")?.querySelector("input")?.focus(); document.getElementById("dish-search")?.scrollIntoView({ behavior: "smooth", block: "center" }); }, 80); }}><img src={assets.search_icon} alt="" /></button>
         <div className="navbar-search-icon">
           <Link to="/cart">
             <img src={assets.basket_icon} alt="" />

@@ -1,6 +1,10 @@
 import foodModel from "../models/foodModel.js";
 import userModel from "../models/userModel.js";
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const uploadsDirectory = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "uploads");
 
 // add food items
 
@@ -44,7 +48,7 @@ const removeFood = async (req, res) => {
     let userData = await userModel.findById(req.body.userId);
     if (userData && userData.role === "admin") {
       const food = await foodModel.findById(req.body.id);
-      fs.unlink(`uploads/${food.image}`, () => {});
+      fs.unlink(path.join(uploadsDirectory, food.image), () => {});
       await foodModel.findByIdAndDelete(req.body.id);
       res.json({ success: true, message: "Food Removed" });
     } else {

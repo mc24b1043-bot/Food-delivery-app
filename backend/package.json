@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "server": "nodemon server.js"
+    "server": "nodemon --ignore data/demo-store.json --ignore uploads/ server.js"
   },
   "author": "",
   "license": "ISC",

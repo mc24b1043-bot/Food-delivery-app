@@ -15,7 +15,7 @@ const FoodDisplay = ({ category, searchTerm, setSearchTerm, sortOrder, setSortOr
       <div className="food-display-heading">
         <div><h2>Fresh picks for you</h2><p>Find something delicious for your next meal.</p></div>
         <div className="food-tools">
-          <label className="food-search"><span aria-hidden="true">Search</span><input aria-label="Search dishes" placeholder="Dishes..." value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} />{searchTerm && <button aria-label="Clear search" onClick={() => setSearchTerm("")}>x</button>}</label>
+          <label className="food-search" id="dish-search"><span aria-hidden="true">Search</span><input aria-label="Search dishes" placeholder="Dishes..." value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} />{searchTerm && <button aria-label="Clear search" onClick={() => setSearchTerm("")}>x</button>}</label>
           <select aria-label="Sort dishes" value={sortOrder} onChange={(event) => setSortOrder(event.target.value)}><option value="featured">Featured</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option></select>
         </div>
       </div>

@@ -1,12 +1,12 @@
-# Sunil's Kitchen - Food Ordering Website
+# Amber - Food Ordering Website
 
-Sunil's Kitchen is a food ordering website built with React, Express, and MongoDB. It includes dish search, price sorting, cart and order flows, and an admin panel for managing menu items and orders.
+Amber is a food ordering website built with React, Express, and MongoDB. It includes dish search, price sorting, cart and order flows, and an admin panel for managing menu items and orders.
 
 ## Project credits
 
-This project builds on the public [Food-Delivery repository by Mshandev](https://github.com/Mshandev/Food-Delivery), with additional customization and features by Sunil.
+This project builds on the public [Food-Delivery repository by Mshandev](https://github.com/Mshandev/Food-Delivery), with additional customization and features.
 
-## Features added by Sunil
+## Features
 
 - Search dishes by name or description
 - Sort the menu by price, low to high or high to low
@@ -54,44 +54,36 @@ This project builds on the public [Food-Delivery repository by Mshandev](https:/
 
 ## Run locally
 
-Install Node.js, then install dependencies in each app folder:
+Install Node.js, open the project folder in VS Code, and install dependencies from the project root:
 
-```bash
-cd frontend && npm install
-cd ../admin && npm install
-cd ../backend && npm install
+```powershell
+npm.cmd --prefix frontend install
+npm.cmd --prefix admin install
+npm.cmd --prefix backend install
 ```
 
-Create `backend/.env`:
+The backend starts in local demo mode when `MONGO_URL` is not set. It serves a sample menu, persists accounts/menu/cart/orders to `backend/data/demo-store.json`, and provides a demo checkout flow. No `.env` file, MongoDB service, or Stripe key is needed for local browsing and testing. The first account registered in demo mode is the admin account.
 
-```bash
-JWT_SECRET=YOUR_SECRET_TEXT
-SALT=10
-MONGO_URL=YOUR_MONGODB_CONNECTION_STRING
-STRIPE_SECRET_KEY=YOUR_STRIPE_SECRET_KEY
-FRONTEND_URL=http://localhost:5173
-```
+For MongoDB mode or real Stripe test checkout, copy `backend/.env.example` to `backend/.env` and fill in your own values. Set `ADMIN_EMAIL` to the email that should have admin privileges. Never commit your `.env` file or real secret keys.
 
-If the frontend or admin should use a different API host, set `VITE_API_URL` in that app's `.env` file, for example `VITE_API_URL=http://localhost:4000`.
+Start each app in its own VS Code terminal from the project root:
 
-Start each part in a separate terminal from the project root:
-
-```bash
+```powershell
 cd backend
-npm run server
+npm.cmd run server
 ```
 
-```bash
+```powershell
 cd frontend
-npm run dev
+npm.cmd run dev
 ```
 
-```bash
+```powershell
 cd admin
-npm run dev
+npm.cmd run dev
 ```
 
-The backend runs on port `4000`. The frontend and admin currently point to the hosted backend. To use your local backend, change their API base URL to `http://localhost:4000` in `frontend/src/context/StoreContext.jsx`, `admin/src/App.jsx`, and `admin/src/assets/assets.js`. For local Stripe checkout, configure the frontend return URL in `backend/controllers/orderController.js` to match the frontend's local Vite URL.
+Open the URLs printed by Vite in your browser. The frontend uses `http://127.0.0.1:5173`, the admin uses `http://127.0.0.1:5174`, and the backend health check is `http://127.0.0.1:4000`.
 
 ## Tech Stack
 * [React](https://reactjs.org/)
