@@ -1,0 +1,16 @@
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 4%;
+}
+.navbar .logo{
+    width: max(10%,80px);
+}
+.admin-brand{font-size:24px;font-weight:750;color:#e34b35}.admin-brand small{font-size:13px;color:#666;margin-left:8px;font-weight:500}
+.navbar .profile{
+    width: 40px;
+}
+.login-conditon{
+    font-size: 20px;
+}
